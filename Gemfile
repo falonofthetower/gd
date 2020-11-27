@@ -1,12 +1,14 @@
-source "https://rubygems.org"
-gem "rack"
-gem "sinatra"
-gem "activesupport"
-gem "sinatra-activerecord"
-gem "rake"
-gem "sqlite3"
-group :test do
-  gem "rspec"
-  gem "rack-test"
-end
+# frozen_string_literal: true
 
+source 'https://rubygems.org'
+gem 'activesupport'
+gem 'rack'
+gem 'rake'
+gem 'rubocop'
+gem 'sinatra'
+gem 'sinatra-activerecord'
+gem 'sqlite3'
+group :test do
+  gem 'rack-test'
+  gem 'rspec'
+end

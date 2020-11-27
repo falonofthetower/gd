@@ -1,2 +1,4 @@
-require "sinatra"
-require "sinatra/activerecord"
+# frozen_string_literal: true
+
+require 'sinatra'
+require 'sinatra/activerecord'
