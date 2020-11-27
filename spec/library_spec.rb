@@ -65,18 +65,41 @@ RSpec.describe Library do
 
   context 'GET to /request/:id' do
     context 'when request exists' do
+      let!(:book1) { Book.create(title: 'Title One') }
+      let(:request) { Request.create(email: 'fake@example.com', book: book1) }
+
       it 'returns status 200' do
+        get "/request/#{request.id}"
+
+        expect(last_response.status).to eq 200
       end
 
       it 'returns data on the specified request' do
+        get "/request/#{request.id}"
+
+        expected_response = {
+          'id' => request.id,
+          'available' => request.book.available?,
+          'title' => request.book.title,
+          'email' => request.email,
+          'timestamp' => request.created_at.to_time.iso8601
+        }
+
+        expect(JSON.parse(last_response.body)).to eq(expected_response)
       end
     end
 
     context 'when request does not exists' do
       it 'returns status 404' do
+        get '/request/0'
+
+        expect(last_response.status).to eq 404
       end
 
       it 'returns an empty response' do
+        get '/request/0'
+
+        expect(JSON.parse(last_response.body)).to eq({})
       end
     end
   end
