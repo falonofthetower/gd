@@ -1,0 +1,15 @@
+AllCops:
+  NewCops: enable
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+  - spec/**/*
+
+Lint/EmptyBlock:
+  Enabled: true
+  Exclude:
+  - spec/**/*
