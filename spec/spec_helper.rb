@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../config.rb'
 require_relative '../app'
 require 'rack/test'
 ENV['RACK_ENV'] = 'test'

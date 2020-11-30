@@ -1,7 +1,5 @@
-require 'sinatra/activerecord'
-require './models'
+require './config'
 
-require 'pry'; binding.pry;
 Book.create(title: "ULYSSES")
 Book.create(title: "THE GREAT GATSBY")
 Book.create(title: "A PORTRAIT OF THE ARTIST AS A YOUNG MAN")
