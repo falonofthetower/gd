@@ -109,20 +109,19 @@ RSpec.describe Library do
       let!(:book) { Book.create(title: 'foobar') }
 
       it 'returns status 201' do
-        post "/request", { :title => book.title, :email => email }
+        post "/request", { :title => book.title, :email => email }.to_json
 
         expect(last_response.status).to eq 201
       end
 
       it 'creates an active request' do
-
         expect {
-          post "/request", { :title => book.title, :email => email }
+          post "/request", { :title => book.title, :email => email }.to_json
         }.to change(Request, :count).by(1)
       end
 
       it 'creates the request with expected data' do
-        post "/request", { :title => book.title, :email => email }
+        post "/request", { :title => book.title, :email => email }.to_json
 
         request = Request.last
 
@@ -131,7 +130,7 @@ RSpec.describe Library do
       end
 
       it 'displays the request data with available' do
-        post "/request", { :title => book.title, :email => email }
+        post "/request", { :title => book.title, :email => email }.to_json
 
         request = Request.last
 
@@ -152,8 +151,9 @@ RSpec.describe Library do
       let!(:book) { Book.create(title: 'foobar') }
 
       it 'displays the request data with not available' do
-        post "/request", { :title => book.title, :email => "old@example.com" }
-        post "/request", { :title => book.title, :email => email }
+        post "/request", { :title => book.title, :email => "old@example.com" }.to_json
+        post "/request", { :title => book.title, :email => email }.to_json
+
 
         request = Request.last
 
@@ -173,7 +173,7 @@ RSpec.describe Library do
       let(:email) { "fake@example.com" }
 
       it 'displays the request data with not available' do
-        post "/request", { :title => "unreal title", :email => email }
+        post "/request", { :title => "unreal title", :email => email }.to_json
 
         expect(last_response.status).to eq 404
         expect(JSON.parse(last_response.body)).to eq({})

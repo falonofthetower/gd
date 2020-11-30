@@ -7,8 +7,14 @@ require './requests'
 require 'json'
 
 class Library < Sinatra::Base
-  get '/request' do
+  before do
     content_type :json
+    request.body.rewind
+    string_json = request.body.read
+    @json = (string_json == "") ? {} : JSON.parse(string_json)
+  end
+
+  get '/request' do
     requests = Requests.all_active.map do |request|
       request.serialize(:id, :email, :title, :timestamp)
     end
@@ -17,8 +23,6 @@ class Library < Sinatra::Base
   end
 
   get '/request/:id' do |id|
-    content_type :json
-
     request = Requests.find(id)
 
     if request
@@ -30,12 +34,9 @@ class Library < Sinatra::Base
   end
 
   post '/request' do
-    content_type :json
-
-    email = params["email"]
-    title = params["title"]
-
-    request, available = Requests.reserve_book(title, email)
+    request, available = Requests.reserve_book(
+      @json["title"], @json["email"]
+    )
 
     if request
       status 201
@@ -49,8 +50,6 @@ class Library < Sinatra::Base
   end
 
   delete '/request/:id' do |id|
-    content_type :json
-
     destruction = Requests.destroy_request(id)
     if destruction
       status 202
