@@ -9,6 +9,7 @@ gem 'rubocop'
 gem 'sinatra'
 gem 'sinatra-activerecord'
 gem 'sqlite3'
+gem 'email_validator'
 
 group :test do
   gem 'database_cleaner-active_record'

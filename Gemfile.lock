@@ -20,6 +20,8 @@ GEM
       activerecord
       database_cleaner (~> 1.8.0)
     diff-lcs (1.4.4)
+    email_validator (2.0.1)
+      activemodel
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     method_source (1.0.0)
@@ -89,6 +91,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   database_cleaner-active_record
+  email_validator
   pry
   rack
   rack-test

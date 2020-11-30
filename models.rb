@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+require 'email_validator'
 
 class Book < ActiveRecord::Base
-  has_many :requests
+  has_many :requests, dependent: :destroy
 
   def available?
     requests.empty?
@@ -17,6 +18,7 @@ end
 
 class Request < ActiveRecord::Base
   belongs_to :book
+  validates :email, email: true
 
   def serialize(*slice)
     {

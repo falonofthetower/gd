@@ -13,10 +13,20 @@ RSpec.describe Book do
     end
 
     context 'with an open request' do
-      it 'returns falsey' do
-        Request.create(email: 'foo@example.com', book: book)
+      let!(:request) { Request.create(email: 'foo@example.com', book: book) }
 
+      it 'returns falsey' do
         expect(book.available?).to be_falsey
+      end
+
+      it 'returns the request from .request' do
+        expect(book.requests).to include(request)
+      end
+
+      it 'deletes the request if deleted' do
+        book.destroy
+
+        expect(Request.find_by(id: request.id)).to be_nil
       end
     end
   end

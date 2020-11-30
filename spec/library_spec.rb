@@ -79,7 +79,6 @@ RSpec.describe Library do
 
         expected_response = {
           'id' => request.id,
-          'available' => request.book.available?,
           'title' => request.book.title,
           'email' => request.email,
           'timestamp' => request.created_at.to_time.iso8601
@@ -106,36 +105,117 @@ RSpec.describe Library do
 
   context 'POST to /request' do
     context 'when the title is available' do
-      it 'returns status 201' do
-      end
+      let(:email) { "fake@example.com" }
+      let!(:book) { Book.create(title: 'foobar') }
 
-      it 'displays the request data with available' do
+      it 'returns status 201' do
+        post "/request", { :title => book.title, :email => email }
+
+        expect(last_response.status).to eq 201
       end
 
       it 'creates an active request' do
+
+        expect {
+          post "/request", { :title => book.title, :email => email }
+        }.to change(Request, :count).by(1)
+      end
+
+      it 'creates the request with expected data' do
+        post "/request", { :title => book.title, :email => email }
+
+        request = Request.last
+
+        expect(request.book).to eq book
+        expect(request.email).to eq request.email
+      end
+
+      it 'displays the request data with available' do
+        post "/request", { :title => book.title, :email => email }
+
+        request = Request.last
+
+        expected_response = {
+          'id' => request.id,
+          'available' => true,
+          'title' => request.book.title,
+          'email' => request.email,
+          'timestamp' => request.created_at.to_time.iso8601
+        }
+
+        expect(JSON.parse(last_response.body)).to eq(expected_response)
       end
     end
 
     context 'when the title is not available' do
+      let(:email) { "fake@example.com" }
+      let!(:book) { Book.create(title: 'foobar') }
+
       it 'displays the request data with not available' do
+        post "/request", { :title => book.title, :email => "old@example.com" }
+        post "/request", { :title => book.title, :email => email }
+
+        request = Request.last
+
+        expected_response = {
+          'id' => request.id,
+          'available' => false,
+          'title' => request.book.title,
+          'email' => request.email,
+          'timestamp' => request.created_at.to_time.iso8601
+        }
+
+        expect(JSON.parse(last_response.body)).to eq(expected_response)
+      end
+    end
+
+    context 'when the title does not exist' do
+      let(:email) { "fake@example.com" }
+
+      it 'displays the request data with not available' do
+        post "/request", { :title => "unreal title", :email => email }
+
+        expect(last_response.status).to eq 404
+        expect(JSON.parse(last_response.body)).to eq({})
       end
     end
   end
 
   context 'DELETE /request/:id' do
     context 'with a matching request' do
+      let(:book) { Book.create(title: "My Title") }
+      let!(:request) { Request.create(book: book, email: "email@example.com") }
+
       it 'returns status 204' do
+        delete "/request/#{request.id}"
+
+        expect(last_response.status).to eq 202
       end
 
       it 'returns an empty response' do
+        delete "/request/#{request.id}"
+
+        expect(JSON.parse(last_response.body)).to eq({})
+      end
+
+      it 'deletes the request' do
+        delete "/request/#{request.id}"
+
+        expect(Request.find_by(id: request.id)).to be_nil
       end
     end
 
     context 'without a matching request' do
       it 'returns status 404' do
+        delete "/request/0"
+
+        expect(last_response.status).to eq 404
       end
 
       it 'returns an empty response' do
+        delete "/request/0"
+
+        expect(JSON.parse(last_response.body)).to eq({})
       end
     end
   end
