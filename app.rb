@@ -2,7 +2,7 @@
 
 require 'sinatra/base'
 require 'sinatra/activerecord'
-require './models'
+Dir[File.join(__dir__, 'models', '*.rb')].each { |file| require file }
 require './requests'
 require 'json'
 

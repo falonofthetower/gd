@@ -4,7 +4,13 @@ require 'spec_helper'
 
 RSpec.describe Book do
   describe '#available?' do
-    let(:book) { Book.create(title: 'foobar') }
+    let!(:book) { Book.create(title: 'foobar') }
+
+    it 'should validate unique title' do
+      new_book = Book.new(title: 'foobar')
+
+      expect(new_book.valid?).to be_falsey
+    end
 
     context 'with no open requests' do
       it 'returns truthy' do

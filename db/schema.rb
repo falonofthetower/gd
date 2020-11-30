@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,21 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_201_127_212_949) do
-  create_table 'books', force: :cascade do |t|
-    t.string 'title'
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
-    t.index ['title'], name: 'index_books_on_title'
+ActiveRecord::Schema.define(version: 2020_11_30_192538) do
+
+  create_table "books", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["title"], name: "index_books_on_title", unique: true
   end
 
-  create_table 'requests', force: :cascade do |t|
-    t.string 'email', null: false
-    t.integer 'book_id'
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
-    t.index ['book_id'], name: 'index_requests_on_book_id'
+  create_table "requests", force: :cascade do |t|
+    t.string "email", null: false
+    t.integer "book_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["book_id"], name: "index_requests_on_book_id"
   end
 
-  add_foreign_key 'requests', 'books'
+  add_foreign_key "requests", "books"
 end
